@@ -1,0 +1,66 @@
+# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: node.js CI
+
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v2
+
+    # Install npm for the given node.js version
+    - name: Build for Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    # Setup the node app and build the app
+    - run: npm ci
+    - run: npm run build --if-present
+    
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x]
+    
+    steps:
+    - name: Test for Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    # Test the app
+    - run: npm test
+
+    # Upload the code file and package*.json files
+    - name: Upload artifact for deployment job
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: |
+          *.js
+          !**.test**.js
+          !**.config**.js
+          package.json
+          package-lock.json
+          !**/node-modules
+          !**/.github

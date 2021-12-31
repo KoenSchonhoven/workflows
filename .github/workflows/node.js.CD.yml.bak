@@ -1,0 +1,54 @@
+# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: node.js CD
+
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        required: true
+        type: string
+    secrets:
+      SSH_SERVER:
+        required: true
+      SSH_USER:
+        required: true
+      SSH_SERVER_PORT:
+        required: true
+      SSH_PRIVATE_KEY:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download artifact from build job
+      uses: actions/download-artifact@v2
+      with:
+        name: ${{ inputs.artifact-name }}
+
+    - name: scp deployment
+      uses: siva1024/scp-deployer@latest
+      with:
+        host: ${{ secrets.SSH_SERVER }}
+        username: ${{ secrets.SSH_USER }}
+        port: ${{ secrets.SSH_SERVER_PORT }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: |
+          *.js
+          *.json
+        target: ${{ secrets.APP_PATH }}
+
+    - name: setup CI
+      uses: fifsky/ssh-action@master
+      with:
+        command: |
+          cd ${{ secrets.APP_PATH }}
+          npm ci
+          npm run build --if-present
+        host: ${{ secrets.SSH_SERVER }}
+        port: ${{ secrets.SSH_SERVER_PORT }}
+        user: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
