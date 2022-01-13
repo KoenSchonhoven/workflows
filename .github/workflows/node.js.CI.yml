@@ -40,13 +40,19 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     
-    # Setup the node app and build the app
-    - run: npm ci
-    - run: npm run build --if-present
-    # Test the app
-    - run: npm test
+    - name: Setup the node app and build the app
+      - run: npm ci
+      - run: npm run build --if-present
+    
+    - name: Test the app
+      uses: ospfranco/gh-jester@latest
+      with:
+        post-comment: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_CONTEXT: ${{ toJson(github) }}
 
-    # Upload the code file and package*.json files
+    # Upload the test results
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
       with:
