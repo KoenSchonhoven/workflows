@@ -46,22 +46,17 @@ jobs:
     # Test the app
     - run: npm test
 
-  save-artifact:
-    needs: build-and-test
-    
-    runs-on: ubuntu-latest
-
-    steps:
-      # Upload the code file and package*.json files
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ inputs.artifact-name }}
-          path: |
-            *.js
-            !**.test**.js
-            !**.config**.js
-            package.json
-            package-lock.json
-            !**/node-modules
-            !**/.github
+    # Upload the code file and package*.json files
+    - name: Upload artifact for deployment job
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: |
+          *.js
+          !**.test**.js
+          !**.config**.js
+          package.json
+          package-lock.json
+          !**/node-modules
+          !**/.github
+  
