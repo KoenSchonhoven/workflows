@@ -9,6 +9,9 @@ on:
       artifact-name:
         required: true
         type: string
+    secrets:
+      REPO_SSH_KEY:
+        required: true
 
 jobs:
   build-and-test:
@@ -21,6 +24,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with: 
+        key: ${{ secrets.REPO_SSH_KEY }}
+        name: id_ed25519
+        known_hosts: unnecessary
+        if_key_exists: replace
 
     # Install npm for the given node.js version
     - name: Build for Node.js ${{ matrix.node-version }}
