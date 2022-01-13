@@ -37,12 +37,12 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: |
           *.js
-          !**.test**.js
+          !(**.test**.js)
           !**.config**.js
           package.json
           package-lock.json
-          !**/node-modules
-          !**/.github
+          !(**/node-modules)
+          !(**/.github)
         target: ${{ secrets.APP_PATH }}
 
     - name: setup CI
