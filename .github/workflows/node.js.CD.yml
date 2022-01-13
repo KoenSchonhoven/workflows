@@ -38,7 +38,7 @@ jobs:
         source: |
           *.js
           !(**.test**.js)
-          !**.config**.js
+          !(**.config**.js)
           package.json
           package-lock.json
           !(**/node-modules)
