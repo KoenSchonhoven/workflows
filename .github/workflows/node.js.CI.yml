@@ -55,13 +55,5 @@ jobs:
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ inputs.artifact-name }}
-        path: |
-          *.js
-          !**.test**.js
-          !**.config**.js
-          package.json
-          package-lock.json
-          !**/node-modules
-          !**/.github
-  
+        name: code-coverage
+        path: coverage/lcov-report
