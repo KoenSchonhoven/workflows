@@ -74,7 +74,7 @@ jobs:
 
     # If testing is succesfull, upload the updated package.json and package-lock.json
     - name: Update package and lock for latest of dependency
-      if: ${{ success() && ( inputs.version == null  || inputs.version == "" ) }}
+      if: ${{ success() && inputs.version == null }}
       run: |
         git add package.json
         git add package-lock.json
@@ -82,7 +82,7 @@ jobs:
         git push
 
     - name: Update package and lock for specific version of dependency
-      if: ${{ success() && ( inputs.version != null && inputs.version != "" ) }}
+      if: ${{ success() && inputs.version != null }}
       run: |
         git add package.json
         git add package-lock.json
