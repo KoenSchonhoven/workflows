@@ -5,8 +5,10 @@ on:
     inputs:
       github-repo-https:
         required: true
+        type: string
       version:
         required: false
+        type: string
     secrets:
       REPO_SSH_KEY:
         required: true
