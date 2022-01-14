@@ -9,6 +9,9 @@ on:
       version:
         required: false
         type: string
+      token:
+        required: true
+        type: string
     secrets:
       REPO_SSH_KEY:
         required: true
@@ -28,7 +31,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ inputs.token }}
 
     - name: Install SSH key
       uses: shimataro/ssh-key-action@v2
