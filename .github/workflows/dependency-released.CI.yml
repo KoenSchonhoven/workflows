@@ -1,0 +1,84 @@
+name: Dependency Released CI
+
+on:
+  workflow_call:
+    inputs:
+      github-repo-https:
+        required: true
+      version:
+        required: false
+    secrets:
+      REPO_SSH_KEY:
+        required: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 17.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with: 
+        key: ${{ secrets.REPO_SSH_KEY }}
+        name: id_ed25519
+        known_hosts: unnecessary
+        if_key_exists: replace
+
+    # Install npm for the given node.js version
+    - name: Build for Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Setup app
+      - run: npm ci
+
+    - name: Upgrade dependency to latest (main)
+      if: ${{ inputs.version == null }}
+      run: npm install ${{ inputs.github-repo-https }}#main
+
+    - name: Upgrade dependency to specific version
+      if: ${{ inputs.version != null }}
+      run: npm install ${{ inputs.github-repo-https }}#${{ inputs.version }}
+    
+    - name: Test the app
+      uses: ospfranco/gh-jester@latest
+      with:
+        post-comment: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+
+    # Upload the test results
+    - name: Upload artifact for deployment job
+      uses: actions/upload-artifact@v2
+      with:
+        name: code-coverage
+        path: coverage/lcov-report
+
+    # If testing is succesfull, upload the updated package.json and package-lock.json
+    - name: Update package and lock for latest of dependency
+      uses: actions/checkout@v2
+      if: ${{ success() }} && ${{ inputs.version == null }}
+      run: |
+        git add package.json
+        git add package-lock.json
+        git commit -m "Updated package and package-lock after dependency update ${{ inputs.github-repo-https }}#main"
+        git push
+
+    - name: Update package and lock for specific version of dependency
+      uses: actions/checkout@v2
+      if: ${{ success() }} && ${{ inputs.version != null }}
+      run: |
+        git add package.json
+        git add package-lock.json
+        git commit -m "Updated package and package-lock after dependency update ${{ inputs.github-repo-https }}#${{ inputs.version }}"
+        git push
