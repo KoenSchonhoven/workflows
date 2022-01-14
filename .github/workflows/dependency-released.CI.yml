@@ -12,6 +12,8 @@ on:
     secrets:
       REPO_SSH_KEY:
         required: true
+      GITHUB_TOKEN:
+        required: true
 
 jobs:
   build-and-test:
@@ -25,6 +27,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Install SSH key
       uses: shimataro/ssh-key-action@v2
@@ -69,7 +73,7 @@ jobs:
 
     # If testing is succesfull, upload the updated package.json and package-lock.json
     - name: Update package and lock for latest of dependency
-      if: ${{ success() }} && ${{ inputs.version == null }}
+      if: ${{ success() && ( inputs.version == null  || inputs.version == "" ) }}
       run: |
         git add package.json
         git add package-lock.json
@@ -77,7 +81,7 @@ jobs:
         git push
 
     - name: Update package and lock for specific version of dependency
-      if: ${{ success() }} && ${{ inputs.version != null }}
+      if: ${{ success() && ( inputs.version != null && inputs.version != "" ) }}
       run: |
         git add package.json
         git add package-lock.json
