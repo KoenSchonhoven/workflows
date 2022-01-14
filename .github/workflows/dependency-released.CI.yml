@@ -15,8 +15,6 @@ on:
     secrets:
       REPO_SSH_KEY:
         required: true
-      GITHUB_TOKEN:
-        required: true
 
 jobs:
   build-and-test:
@@ -64,7 +62,7 @@ jobs:
       with:
         post-comment: true
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.token }}
         GITHUB_CONTEXT: ${{ toJson(github) }}
 
     # Upload the test results
