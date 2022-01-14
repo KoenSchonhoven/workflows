@@ -39,7 +39,7 @@ jobs:
         cache: 'npm'
     
     - name: Setup app
-      - run: npm ci
+      run: npm ci
 
     - name: Upgrade dependency to latest (main)
       if: ${{ inputs.version == null }}
