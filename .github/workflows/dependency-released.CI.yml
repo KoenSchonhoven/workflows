@@ -51,11 +51,11 @@ jobs:
 
     - name: Upgrade dependency to latest (main)
       if: ${{ inputs.version == null }}
-      run: npm install ${{ inputs.github-repo-https }}#main
+      run: npm install https://${{ inputs.token }}@github.com/${{ inputs.github-repo-https }}#main
 
     - name: Upgrade dependency to specific version
       if: ${{ inputs.version != null }}
-      run: npm install ${{ inputs.github-repo-https }}#${{ inputs.version }}
+      run: npm install https://${{ inputs.token }}@github.com/${{ inputs.github-repo-https }}#${{ inputs.version }}
     
     - name: Test the app
       uses: ospfranco/gh-jester@latest
