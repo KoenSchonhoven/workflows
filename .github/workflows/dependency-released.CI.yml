@@ -21,7 +21,8 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
 
     - name: Install SSH key
       uses: shimataro/ssh-key-action@v2
@@ -66,7 +67,6 @@ jobs:
 
     # If testing is succesfull, upload the updated package.json and package-lock.json
     - name: Update package and lock for latest of dependency
-      uses: actions/checkout@v2
       if: ${{ success() }} && ${{ inputs.version == null }}
       run: |
         git add package.json
@@ -75,7 +75,6 @@ jobs:
         git push
 
     - name: Update package and lock for specific version of dependency
-      uses: actions/checkout@v2
       if: ${{ success() }} && ${{ inputs.version != null }}
       run: |
         git add package.json
