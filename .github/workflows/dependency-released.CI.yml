@@ -6,9 +6,6 @@ on:
       github-ref:
         required: true
         type: string
-      package-name:
-        required: true
-        type: string
       version:
         required: false
         type: string
@@ -57,12 +54,10 @@ jobs:
 
     - name: Upgrade dependency to latest (main)
       if: ${{ inputs.version == null }}
-      #run: npm install ${{ inputs.package-name }}
       run: npm install ${{ inputs.github-ref }}
 
     - name: Upgrade dependency to specific version
       if: ${{ inputs.version != null }}
-      #run: npm install ${{ inputs.package-name }}@${{ inputs.version }}
       run: npm install ${{ inputs.github-ref }}#${{ inputs.version }}
     
     - name: Test the app
