@@ -3,7 +3,7 @@ name: Dependency Released CI
 on:
   workflow_call:
     inputs:
-      github-repo-https:
+      package-name:
         required: true
         type: string
       version:
@@ -54,11 +54,11 @@ jobs:
 
     - name: Upgrade dependency to latest (main)
       if: ${{ inputs.version == null }}
-      run: npm install https://${{ inputs.token }}@github.com/${{ inputs.github-repo-https }}#main
+      run: npm install ${{ inputs.package-name }}
 
     - name: Upgrade dependency to specific version
       if: ${{ inputs.version != null }}
-      run: npm install https://${{ inputs.token }}@github.com/${{ inputs.github-repo-https }}#${{ inputs.version }}
+      run: npm install ${{ inputs.package-name }}@${{ inputs.version }}
     
     - name: Test the app
       uses: ospfranco/gh-jester@latest
