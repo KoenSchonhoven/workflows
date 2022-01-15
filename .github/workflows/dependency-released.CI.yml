@@ -63,7 +63,7 @@ jobs:
     - name: Upgrade dependency to specific version
       if: ${{ inputs.version != null }}
       #run: npm install ${{ inputs.package-name }}@${{ inputs.version }}
-      run: npm install ${{ inputs.github-ref }}@${{ inputs.version }}
+      run: npm install ${{ inputs.github-ref }}#${{ inputs.version }}
     
     - name: Test the app
       uses: ospfranco/gh-jester@latest
