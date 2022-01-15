@@ -3,6 +3,9 @@ name: Dependency Released CI
 on:
   workflow_call:
     inputs:
+      github-ref:
+        required: true
+        type: string
       package-name:
         required: true
         type: string
@@ -54,11 +57,13 @@ jobs:
 
     - name: Upgrade dependency to latest (main)
       if: ${{ inputs.version == null }}
-      run: npm install ${{ inputs.package-name }}
+      #run: npm install ${{ inputs.package-name }}
+      run: npm install ${{ inputs.github-ref }}
 
     - name: Upgrade dependency to specific version
       if: ${{ inputs.version != null }}
-      run: npm install ${{ inputs.package-name }}@${{ inputs.version }}
+      #run: npm install ${{ inputs.package-name }}@${{ inputs.version }}
+      run: npm install ${{ inputs.github-ref }}@${{ inputs.version }}
     
     - name: Test the app
       uses: ospfranco/gh-jester@latest
@@ -82,7 +87,7 @@ jobs:
         git config --global user.name "${{ inputs.user-name }}"
         git add package.json
         git add package-lock.json
-        git commit -m "Updated package and package-lock after dependency update ${{ inputs.github-repo-https }}#main"
+        git commit -m "Updated package and package-lock after dependency update ${{ inputs.github-ref }}#main"
         git push
 
     - name: Update package and lock for specific version of dependency
@@ -91,5 +96,5 @@ jobs:
         git config --global user.name "${{ inputs.user-name }}"
         git add package.json
         git add package-lock.json
-        git commit -m "Updated package and package-lock after dependency update ${{ inputs.github-repo-https }}#${{ inputs.version }}"
+        git commit -m "Updated package and package-lock after dependency update ${{ inputs.github-ref }}#${{ inputs.version }}"
         git push
