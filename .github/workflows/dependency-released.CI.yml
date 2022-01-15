@@ -69,7 +69,7 @@ jobs:
         GITHUB_CONTEXT: ${{ toJson(github) }}
 
     # Upload the test results
-    - name: Upload artifact for deployment job
+    - name: Upload code-coverage artiface
       uses: actions/upload-artifact@v2
       with:
         name: code-coverage
