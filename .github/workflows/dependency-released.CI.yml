@@ -12,9 +12,6 @@ on:
       token:
         required: true
         type: string
-      user-email:
-        required: true
-        type: string
       user-name:
         required: true
         type: string
@@ -82,7 +79,6 @@ jobs:
     - name: Update package and lock for latest of dependency
       if: ${{ success() && inputs.version == null }}
       run: |
-        git config --global user.email "${{ inputs.user-email }}"
         git config --global user.name "${{ inputs.user-name }}"
         git add package.json
         git add package-lock.json
@@ -92,7 +88,6 @@ jobs:
     - name: Update package and lock for specific version of dependency
       if: ${{ success() && inputs.version != null }}
       run: |
-        git config --global user.email "${{ inputs.user-email }}"
         git config --global user.name "${{ inputs.user-name }}"
         git add package.json
         git add package-lock.json
