@@ -74,22 +74,3 @@ jobs:
       with:
         name: code-coverage
         path: coverage/lcov-report
-
-    # If testing is succesfull, upload the updated package.json and package-lock.json
-    - name: Update package and lock for latest of dependency
-      if: ${{ success() && inputs.version == null }}
-      run: |
-        git config --global user.name "${{ inputs.user-name }}"
-        git add package.json
-        git add package-lock.json
-        git commit -m "Updated package and package-lock after dependency update ${{ inputs.github-ref }}#main"
-        git push
-
-    - name: Update package and lock for specific version of dependency
-      if: ${{ success() && inputs.version != null }}
-      run: |
-        git config --global user.name "${{ inputs.user-name }}"
-        git add package.json
-        git add package-lock.json
-        git commit -m "Updated package and package-lock after dependency update ${{ inputs.github-ref }}#${{ inputs.version }}"
-        git push
