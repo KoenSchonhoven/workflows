@@ -12,9 +12,6 @@ on:
       token:
         required: true
         type: string
-      user-name:
-        required: true
-        type: string
     secrets:
       REPO_SSH_KEY:
         required: true
@@ -54,7 +51,7 @@ jobs:
 
     - name: Upgrade dependency to latest (main)
       if: ${{ inputs.version == null }}
-      run: npm install ${{ inputs.github-ref }}
+      run: npm install ${{ inputs.github-ref }}#main
 
     - name: Upgrade dependency to specific version
       if: ${{ inputs.version != null }}
