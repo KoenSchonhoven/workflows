@@ -8,6 +8,12 @@ on:
     secrets:
       REPO_SSH_KEY:
         required: true
+      NPM_LOGIN_NAME: 
+        required: false
+      NPM_EMAIL:
+        required: false
+      PAT_PACKAGE:
+        required: false
 
 jobs:
   build-and-test:
@@ -36,8 +42,13 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     
-    - run: npm ci
-    - run: npm run build --if-present
+    - name: Login to npm registry if required
+      if: ${{ secrets.NPM_LOGIN_NAME != null}}
+      run: npm login --scope=@${{ secrets.NPM_LOGIN_NAME}} --registry=https://npm.pkg.github.com << ${{secrets.NPM_LOGIN_NAME}} << ${{secrets.PAT_PACKAGE}} << ${{secrets.NPM_EMAIL}}
+
+    - name: Install packages
+      run: npm ci
+      run: npm run build --if-present
     
     - name: Test the app
       uses: ospfranco/gh-jester@latest
