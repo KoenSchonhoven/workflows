@@ -49,7 +49,7 @@ jobs:
       run: |
         cat << EOF > .npmrc
         always-auth=true
-        registry=https://npm.pkg.github.com
+        @${{secrets.NPM_LOGIN_NAME}}:registry=https://npm.pkg.github.com
         //npm.pkg.github.com:_username=${{secrets.NPM_LOGIN_NAME}}
         //npm.pkg.github.com:_password=${{secrets.PAT_PACKAGE}}
         //npm.pkg.github.com:_email=${{secrets.NPM_EMAIL}}
