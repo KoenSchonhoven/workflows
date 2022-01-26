@@ -46,14 +46,7 @@ jobs:
       env: 
         NPM_LOGIN_NAME: ${{ secrets.NPM_LOGIN_NAME }}
       if: env.NPM_LOGIN_NAME != null && env.NPM_LOGIN_NAME != ''
-      run: |
-        spawn npm login --scope=@${{ secrets.NPM_LOGIN_NAME}} --registry=https://npm.pkg.github.com
-        expect "Username:"
-        send "${{secrets.NPM_LOGIN_NAME}}\r"
-        expect "Password:"
-        send "${{secrets.PAT_PACKAGE}}\r"
-        expect "Email: (this IS public) "
-        send "${{secrets.NPM_EMAIL}}\r"
+      run: printf '${{secrets.NPM_LOGIN_NAME}}\n${{secrets.PAT_PACKAGE}}\n${{secrets.NPM_EMAIL}}\n' | npm login --scope=@${{ secrets.NPM_LOGIN_NAME}} --registry=https://npm.pkg.github.com
 
     - name: Install packages
       run: |
