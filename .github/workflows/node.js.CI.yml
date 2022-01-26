@@ -48,7 +48,7 @@ jobs:
       if: env.NPM_LOGIN_NAME != null && env.NPM_LOGIN_NAME != ''
       run: |
         cat << EOF > .npmrc
-        //npm.pkg.github.com:_authToken:${{secrets.PAT_PACKAGE}}
+        //npm.pkg.github.com:_authToken=${{secrets.PAT_PACKAGE}}
         EOF
 
     - name: Install packages
