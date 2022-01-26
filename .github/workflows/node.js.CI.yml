@@ -52,9 +52,7 @@ jobs:
         cat << EOF > .npmrc
         always-auth=true
         @${NPM_LOGIN_NAME}:registry=https://npm.pkg.github.com
-        //npm.pkg.github.com/:_username=${NPM_LOGIN_NAME}
-        //npm.pkg.github.com/:_password=${NPM_TOKEN}
-        //npm.pkg.github.com/:_email=${NPM_EMAIL}
+        //npm.pkg.github.com/_authToken=${NPM_TOKEN}
         EOF
         npm ci
         npm run build --if-present
