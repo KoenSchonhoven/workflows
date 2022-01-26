@@ -44,7 +44,7 @@ jobs:
     
     - name: Login to npm registry if required
       env: 
-        NPM_LOGIN_NAME = ${{ secrets.NPM_LOGIN_NAME }}
+        NPM_LOGIN_NAME: ${{ secrets.NPM_LOGIN_NAME }}
       if: env.NPM_LOGIN_NAME != null && env.NPM_LOGIN_NAME != ''
       run: npm login --scope=@${{ secrets.NPM_LOGIN_NAME}} --registry=https://npm.pkg.github.com << ${{secrets.NPM_LOGIN_NAME}} << ${{secrets.PAT_PACKAGE}} << ${{secrets.NPM_EMAIL}}
 
