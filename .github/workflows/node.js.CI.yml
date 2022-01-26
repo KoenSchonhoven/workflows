@@ -51,8 +51,8 @@ jobs:
       run: |
         cat << EOF > .npmrc
         always-auth=true
-        @${NPM_LOGIN_NAME}:registry=https://npm.pkg.github.com
-        //npm.pkg.github.com/_authToken=${NPM_TOKEN}
+        @${{ secrets.NPM_LOGIN_NAME }}:registry=https://npm.pkg.github.com
+        //npm.pkg.github.com/_authToken=${{ secrets.PAT_PACKAGES }}
         EOF
         npm ci
         npm run build --if-present
