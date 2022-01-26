@@ -12,7 +12,7 @@ on:
         required: false
       NPM_EMAIL:
         required: false
-      PAT_PACKAGE:
+      PAT_PACKAGES:
         required: false
 
 jobs:
@@ -45,7 +45,7 @@ jobs:
     - name: Login to npm registry, then install packages
       env: 
         NPM_LOGIN_NAME: ${{ secrets.NPM_LOGIN_NAME }}
-        NPM_TOKEN: ${{ secrets.PAT_PACKAGE }}
+        NPM_TOKEN: ${{ secrets.PAT_PACKAGES }}
       if: env.NPM_LOGIN_NAME != null && env.NPM_LOGIN_NAME != ''
       run: |
         cat << EOF > .npmrc
