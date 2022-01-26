@@ -25,8 +25,6 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      env: 
-        NPM_LOGIN_NAME = ${{ secrets.NPM_LOGIN_NAME }}
     - uses: actions/checkout@v2
 
     - name: Install SSH key
@@ -45,7 +43,9 @@ jobs:
         cache: 'npm'
     
     - name: Login to npm registry if required
-      if: env.NPM_LOGIN_NAME != null
+      env: 
+        NPM_LOGIN_NAME = ${{ secrets.NPM_LOGIN_NAME }}
+      if: env.NPM_LOGIN_NAME != null && env.NPM_LOGIN_NAME != ''
       run: npm login --scope=@${{ secrets.NPM_LOGIN_NAME}} --registry=https://npm.pkg.github.com << ${{secrets.NPM_LOGIN_NAME}} << ${{secrets.PAT_PACKAGE}} << ${{secrets.NPM_EMAIL}}
 
     - name: Install packages
