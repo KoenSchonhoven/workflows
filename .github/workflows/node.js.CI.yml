@@ -46,14 +46,9 @@ jobs:
       env: 
         NPM_LOGIN_NAME: ${{ secrets.NPM_LOGIN_NAME }}
       if: env.NPM_LOGIN_NAME != null && env.NPM_LOGIN_NAME != ''
-#      run: printf '${{secrets.NPM_LOGIN_NAME}}\n${{secrets.PAT_PACKAGE}}\n${{secrets.NPM_EMAIL}}\n' | npm login --scope=@${{ secrets.NPM_LOGIN_NAME}} --registry=https://npm.pkg.github.com
       run: |
-        npm adduser --scope=@${{ secrets.NPM_LOGIN_NAME}} --registry=https://npm.pkg.github.com <<!
-        ${{secrets.NPM_LOGIN_NAME}}
-        ${{secrets.PAT_PACKAGE}}
-        ${{secrets.NPM_EMAIL}}
-        exit 0
-        !
+        npm install -g npm-cli-login
+        NPM_USER=${{secrets.NPM_LOGIN_NAME}} NPM_PASS=${{secrets.PAT_PACKAGE}} NPM_EMAIL=${{secrets.NPM_EMAIL}} npm-cli-login
 
     - name: Install packages
       run: |
