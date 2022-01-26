@@ -45,11 +45,12 @@ jobs:
     - name: Login to npm registry, then install packages
       env: 
         NPM_LOGIN_NAME: ${{ secrets.NPM_LOGIN_NAME }}
+        NPM_TOKEN: ${{ secrets.PAT_PACKAGE }}
       if: env.NPM_LOGIN_NAME != null && env.NPM_LOGIN_NAME != ''
       run: |
         cat << EOF > .npmrc
-        //npm.pkg.github.com/:_authToken=${{ secrets.PAT_PACKAGE }}
-        @${{secrets.NPM_LOGIN_NAME}}:registry=https://npm.pkg.github.com
+        //npm.pkg.github.com/:_authToken=${NPM_TOKEN}}
+        @${NPM_LOGIN_NAME}:registry=https://npm.pkg.github.com
         EOF
         npm ci
         npm run build --if-present
